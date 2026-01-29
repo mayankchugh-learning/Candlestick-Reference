@@ -1,0 +1,64 @@
+Requirements Specification for Candlestick Alert System
+1. Project Overview
+Develop a Python application that interacts with TradingView's API to fetch monthly candlestick data for all Indian stocks and generates buy/sell alerts based on specified conditions.
+2. Prerequisites
+•	TradingView API: Access required for fetching candlestick data.
+•	Python Libraries: 
+o	requests: For making API calls.
+o	pandas: For data manipulation and analysis.
+o	matplotlib: (optional) For visual representation of the data.
+o	Integration of a Free LLM for analysis (good to have it).
+3. Workflow Breakdown
+Step 1: Fetch Data
+•	Function: fetch_candlestick_data(symbol, interval, start_date, end_date)
+•	Description: Retrieves monthly candlestick data for all Indian stocks from the TradingView API.
+Step 2: Data Processing
+•	Function: process_data(data)
+•	Description: Parses the fetched data to extract opening and closing prices of relevant candles.
+Step 3: Comparison Logic
+•	Function: generate_signals(data)
+•	Description: 
+o	Buy Signal: 
+	If the previous candle is red: 
+	Check if the closing price of the current green candle is higher than the opening price of the red candle.
+o	Sell Signal: 
+	If the previous candle is green: 
+	Check if the closing price of the current red candle is lower than the opening price of the green candle.
+Step 4: Alerts Generation
+•	Function: send_alert(message)
+•	Description: 
+o	Set up a notification system to send alerts via email/SMS when conditions for buy/sell signals are met.
+Step 5: Main Function
+•	Function: main()
+•	Description: Orchestrates the fetching, processing of data, and execution of alert logic.
+4. Additional Improvements
+•	Error Handling: Implement exception handling for API calls and data processing.
+•	Notification System: Real-time alert system through email/SMS.
+•	Visual Representation: Use matplotlib for candlestick chart visualisations.
+5. Components Breakdown
+File	Description
+index.html	Frontend for the Candlestick Alert System
+stock_analyzer.py	AI-powered analysis via Poe Bot
+app.py	Flask REST API server
+readme.md	Setup instructions
+requirements.txt	Required libraries for installation
+codewalkthrough.md	Code explanation for developers
+functionality-walkthrough.md	User guide on system applications
+6. New Features for Dashboard
+•	Dashboard: 
+o	Overview of all Indian stocks 
+o	Table displaying the top 10 affected stocks with signals. Also on click I could be able to see the details why Green -> Bullish (Close > Open) or Red -> Bearish (Close < Open) – graphical represnetation
+o	Real-time stats: Total stocks, Buy/Sell signals, Emails sent.
+•	Stock Scanner: 
+o	Option to scan all NSE stocks with filtering capabilities.
+o	Progress bar for real-time updates.
+•	Alerts Tab: 
+o	View generated alerts with filtering options.
+o	Ability to export alerts to file.
+•	Email Settings: 
+o	Configure recipient emails, automate alerts, and test email functionality through emailjs.
+7. Email Setup Instructions
+•	Add an email service (e.g., Gmail/Outlook).
+•	Create an email template with variables: {{to_email}}, {{subject}}, {{message}}.
+Conclusion
+This structured approach outlines the requirements, workflow, and essential components necessary for building a robust candlestick alert system. Implementing the steps as detailed will facilitate effective monitoring of stock performance, enabling timely buy and sell decisions based on candlestick pattern analysis.

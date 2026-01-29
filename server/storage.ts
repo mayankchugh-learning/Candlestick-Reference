@@ -64,6 +64,7 @@ export class DatabaseStorage implements IStorage {
           lastPrice: stockData.lastPrice,
           lastSignal: stockData.lastSignal,
           lastSignalDate: stockData.lastSignalDate,
+          signalReason: stockData.signalReason,
           updatedAt: new Date(),
         },
       })

@@ -1,11 +1,11 @@
 import type { Express } from "express";
-import type { Server } from "http"; // Corrected import
+import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import { registerChatRoutes } from "./replit_integrations/chat";
-import { stocks } from "@shared/schema";
+import cron from "node-cron";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -15,12 +15,43 @@ export async function registerRoutes(
   await setupAuth(app);
   registerAuthRoutes(app);
 
-  // 2. Setup Chat (Optional, but good to have as per requirements)
+  // 2. Setup Chat
   registerChatRoutes(app);
 
-  // 3. Application Routes
+  // 3. Automated Monthly Scan (1st of every month at midnight)
+  cron.schedule('0 0 1 * *', async () => {
+    console.log('Running automated monthly stock scan...');
+    // In a real app, this would iterate all NSE stocks
+    const dummyStocks = [
+      { 
+        symbol: "RELIANCE", 
+        name: "Reliance Industries", 
+        lastPrice: "2600.50", 
+        lastSignal: "BUY",
+        signalReason: "Bullish: Monthly Close (2600.50) > Open (2500.00). Price has engulfed previous Red month's opening." 
+      },
+      { 
+        symbol: "HDFCBANK", 
+        name: "HDFC Bank", 
+        lastPrice: "1650.00", 
+        lastSignal: "BUY",
+        signalReason: "Bullish: Monthly Close (1650.00) > Open (1600.00). Price momentum is positive."
+      },
+    ];
+    for (const s of dummyStocks) {
+      await storage.upsertStock({
+        symbol: s.symbol,
+        name: s.name,
+        lastPrice: s.lastPrice,
+        lastSignal: s.lastSignal as "BUY" | "SELL" | "NONE",
+        lastSignalDate: new Date(),
+        signalReason: s.signalReason
+      });
+    }
+  });
+
+  // 4. Application Routes
   
-  // Stocks
   app.get(api.stocks.list.path, isAuthenticated, async (req, res) => {
     const { search, signal } = req.query;
     const stocks = await storage.getStocks(

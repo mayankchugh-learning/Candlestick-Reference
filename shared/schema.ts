@@ -17,6 +17,7 @@ export const stocks = pgTable("stocks", {
   lastSignal: text("last_signal", { enum: ["BUY", "SELL", "NONE"] }).default("NONE").notNull(),
   lastSignalDate: timestamp("last_signal_date"),
   signalReason: text("signal_reason"), // Why Green (Bullish) or Red (Bearish)
+  signalHistory: jsonb("signal_history").default([]), // Store past signals
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
